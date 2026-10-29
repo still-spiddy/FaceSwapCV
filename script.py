@@ -2,9 +2,14 @@ import cv2
 
 
 face_cascade=cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+
+image = input("Enter the absolute path of the pfp you want to use: ")
 cap = cv2.VideoCapture(0)
+pfp = cv2.imread(image)
+
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+print("Enter q to exit!!")
 
 while True:
     ret, frame = cap.read()
@@ -16,12 +21,14 @@ while True:
     faces = face_cascade.detectMultiScale(gray,1.1,5)
 
     for (x,y,w,h) in faces:
-        cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
-
+        avatar = cv2.resize(pfp,(w,h))
+        frame[y:y+h,x:x+w] = avatar
     
     cv2.imshow("Face Detection",frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
+        print("Quitting...")
         break
+
 
 cap.release()
 cv2.destroyAllWindows()
